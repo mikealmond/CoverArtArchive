@@ -1,0 +1,32 @@
+{
+    "name": "mikealmond/coverartarchive",
+    "type": "library",
+    "description": "A library for accessing the CoverArtArchive API",
+    "keywords": ["coverart", "musicbrainz", "library", "php", "api"],
+    "homepage": "https://github.com/mikealmond/CoverArtArchive",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mike Almond",
+            "email": "mike@almsy.com",
+            "homepage": "http://mikealmond.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.8"
+    },
+    "autoload": {
+        "psr-0": {
+            "CoverArtArchive": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    },
+    "require": {
+        "guzzle/guzzle": "3.4.1"
+    }
+}
