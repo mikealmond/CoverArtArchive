@@ -1,7 +1,7 @@
 {
     "name": "mikealmond/coverartarchive",
     "type": "library",
-    "description": "A library for accessing the CoverArtArchive API",
+    "description": "A PHP library for accessing the CoverArtArchive API",
     "keywords": ["coverart", "musicbrainz", "library", "php", "api"],
     "homepage": "https://github.com/mikealmond/CoverArtArchive",
     "license": "MIT",
