@@ -1,14 +1,14 @@
 <?php
 
-use CoverArtArchive\CoverArtArchive;
+use CoverArtArchive\CoverArt;
+use Guzzle\Http\Client;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$coverArt = new CoverArtArchive();
-
 try {
+    $coverArt = new CoverArt('1e477f68-c407-4eae-ad01-518528cedc2c', new Client());
+    $back     = $coverArt->getBackImage();
 
-    $back = $coverArt->getImages('1e477f68-c407-4eae-ad01-518528cedc2c')->getBackImage();
     ?>
     <img src="<?=$back->getThumbnail('small')?>" />
     <img src="<?=$back->getThumbnail('large')?>" />

@@ -7,15 +7,14 @@ This PHP library that allows you to easily access the Cover Art Archive API. Vis
 
 ```php
 <?php
-use CoverArtArchive\CoverArtArchive;
+use CoverArtArchive\CoverArt;
+use Guzzle\Http\Client;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$coverArt = new CoverArtArchive();
-
 try {
-
-    $front = $coverArt->getImages('1e477f68-c407-4eae-ad01-518528cedc2c')->getFrontImage();
+    $coverArt = new CoverArt('1e477f68-c407-4eae-ad01-518528cedc2c', new Client());
+    $front    = $coverArt->getFrontImage();
     ?>
     <img src="<?=$front->getThumbnail('small')?>" />
     <img src="<?=$front->getThumbnail('large')?>" />

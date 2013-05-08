@@ -8,7 +8,7 @@
 
 namespace CoverArtArchive;
 
-use Guzzle\Http\Client;
+use Guzzle\Http\ClientInterface;
 
 /**
  * Connect to the Cover Art Archive web service
@@ -17,20 +17,10 @@ use Guzzle\Http\Client;
  *
  * @link http://github.com/mikealmond/CoverArtArchive
  */
-class CoverArtArchive
+class CoverArt
 {
 
     const URL = 'http://coverartarchive.org';
-
-    /**
-     * Used as a flag on the getImages() method
-     */
-    const CHAIN = true;
-
-    /**
-     * Used as a flag on the getImages() method
-     */
-    const RETURN_IMAGES = false;
 
     /**
      * Stores an array of CoverArtImage objects
@@ -48,23 +38,73 @@ class CoverArtArchive
     public $back;
 
     /**
+     * The CoverArtImage object for the back image
+     */
+    private $mbid;
+
+    /**
+     * The Guzzle client used to make cURL requests
+     *
+     * @var \Guzzle\Http\ClientInterface
+     */
+    private $client;
+
+    /**
      * Retrieves an array of images based on a
      * Music Brainz ID
      *
-     * @param string $mbid
-     * @param bool   $chain A flag to change what the method returns. Defaults to
-     *      true to return $this
-     * @throws \CoverArtArchive\Exception
-     * @return self|array
+     * @throws \InvalidArgumentException
+     * @return array
      */
+    public function __construct($mbid, ClientInterface $client)
+    {
+        $this->client = $client;
 
-    public function getImages($mbid, $chain = true)
+        $this->setMBID($mbid);
+        $this->retrieveImages();
+    }
+
+    /**
+     * Sets the MusicBrainzID
+     */
+    public function setMBID($mbid)
     {
         if (!self::isValidMBID($mbid)) {
-            throw new Exception('Invalid Music Brainz ID');
+            throw new \InvalidArgumentException('Invalid Music Brainz ID');
         }
 
-        $response = $this->call('/release/' . $mbid);
+        $this->mbid = $mbid;
+    }
+
+    /**
+     * Returns an array of images
+     *
+     * @return array
+     */
+    public function getMBID()
+    {
+        return $this->mbid;
+    }
+
+    /**
+     * Returns an array of images
+     *
+     * @return array
+     */
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    /**
+     * Retrieves an array of images based on a
+     * Music Brainz ID
+     *
+     * @return array
+     */
+    public function retrieveImages()
+    {
+        $response = $this->call('/release/' . $this->getMBID());
 
         if (isset($response['images'])) {
             foreach ($response['images'] as $image) {
@@ -79,7 +119,7 @@ class CoverArtArchive
             }
         }
 
-        return ($chain == true) ? $this : $this->images;
+        return $this;
     }
 
     /**
@@ -118,10 +158,11 @@ class CoverArtArchive
      * @param  string $path
      * @return array
      */
-    final private function call($path)
+    private function call($path)
     {
-        $client = new Client(self::URL);
-        $request = $client->get($path);
+        $this->client->setBaseUrl(self::URL);
+
+        $request = $this->client->get($path);
         $request->setHeader('Accept', 'application/json');
 
         return $request->send()->json();
