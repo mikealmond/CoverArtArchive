@@ -21,27 +21,25 @@ class CoverArt
 {
 
     const URL = 'http://coverartarchive.org';
-
     /**
      * Stores an array of CoverArtImage objects
+     * @var $images array of {@link \CoverArtArchive\CoverArtImage} objects
      */
     public $images = array();
-
     /**
      * The CoverArtImage object for the front image
+     * @var $front \CoverArtArchive\CoverArtImage
      */
     public $front;
-
     /**
      * The CoverArtImage object for the back image
+     * @var $back \CoverArtArchive\CoverArtImage
      */
     public $back;
-
     /**
-     * The CoverArtImage object for the back image
+     * The Music Brainz Id of the album
      */
     private $mbid;
-
     /**
      * The Guzzle client used to make cURL requests
      *
@@ -53,8 +51,11 @@ class CoverArt
      * Retrieves an array of images based on a
      * Music Brainz ID
      *
-     * @throws \InvalidArgumentException
-     * @return array
+     *
+     * @param                              $mbid
+     * @param \Guzzle\Http\ClientInterface $client
+     *
+     * @return \CoverArtArchive\CoverArt
      */
     public function __construct($mbid, ClientInterface $client)
     {
@@ -77,30 +78,22 @@ class CoverArt
     }
 
     /**
-     * Returns an array of images
+     * Checks to see if a supplied MBID is a valid UUID
      *
-     * @return array
-     */
-    public function getMBID()
-    {
-        return $this->mbid;
-    }
-
-    /**
-     * Returns an array of images
+     * @param  string $mbid
      *
-     * @return array
+     * @return bool
      */
-    public function getImages()
+    public static function isValidMBID($mbid)
     {
-        return $this->images;
+        return preg_match("/^(\{)?[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}(?(1)\})$/i", $mbid);
     }
 
     /**
      * Retrieves an array of images based on a
      * Music Brainz ID
      *
-     * @return array
+     * @return \CoverArtArchive\CoverArt
      */
     public function retrieveImages()
     {
@@ -120,6 +113,43 @@ class CoverArt
         }
 
         return $this;
+    }
+
+    /**
+     * Perform a cURL request based on a supplied path
+     *
+     * @param  string $path
+     *
+     * @return array
+     */
+    private function call($path)
+    {
+        $this->client->setBaseUrl(self::URL);
+
+        $request = $this->client->get($path);
+        $request->setHeader('Accept', 'application/json');
+
+        return $request->send()->json();
+    }
+
+    /**
+     * Returns an array of images
+     *
+     * @return array
+     */
+    public function getMBID()
+    {
+        return $this->mbid;
+    }
+
+    /**
+     * Returns an array of images
+     *
+     * @return array
+     */
+    public function getImages()
+    {
+        return $this->images;
     }
 
     /**
@@ -151,32 +181,4 @@ class CoverArt
 
         return $this->back;
     }
-
-    /**
-     * Perform a cURL request based on a supplied path
-     *
-     * @param  string $path
-     * @return array
-     */
-    private function call($path)
-    {
-        $this->client->setBaseUrl(self::URL);
-
-        $request = $this->client->get($path);
-        $request->setHeader('Accept', 'application/json');
-
-        return $request->send()->json();
-    }
-
-    /**
-     * Checks to see if a supplied MBID is a valid UUID
-     *
-     * @param  string $mbid
-     * @return bool
-     */
-    public static function isValidMBID($mbid)
-    {
-        return preg_match("/^(\{)?[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}(?(1)\})$/i", $mbid);
-    }
-
 }

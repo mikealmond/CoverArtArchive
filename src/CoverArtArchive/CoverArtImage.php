@@ -18,13 +18,16 @@ class CoverArtImage
      */
     public $image = array();
 
+    /**
+     * @param array $image
+     */
     public function __construct(array $image)
     {
         $this->image = $image;
     }
 
     /**
-     * Returns the filepath to the requested image
+     * Returns the file path to the requested image
      *
      * @return string
      */
@@ -54,9 +57,10 @@ class CoverArtImage
     }
 
     /**
-     * Returns the filepath to the requested thumbnail
+     * Returns the file path to the requested thumbnail
      *
-     * @param  string                    $size The requested thumbnail size
+     * @param  string $size The requested thumbnail size
+     *
      * @throws \InvalidArgumentException
      * @return string
      */
@@ -100,10 +104,9 @@ class CoverArtImage
     }
 
     /**
-     * Returns the filepath to the requested thumbnail
+     * Returns the file path to the requested thumbnail
      *
-     * @param  string                    $size The requested thumbnail size
-     * @throws \InvalidArgumentException
+     * @internal param string $size The requested thumbnail size
      * @return string
      */
     public function getTypes()
@@ -120,5 +123,4 @@ class CoverArtImage
     {
         return $this->image['comment'];
     }
-
 }

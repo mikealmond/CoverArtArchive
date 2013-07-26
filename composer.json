@@ -14,7 +14,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.8"
+        "php": ">=5.3.8",
+        "guzzle/guzzle": "3.4.1"
     },
     "autoload": {
         "psr-0": {
@@ -25,8 +26,5 @@
         "branch-alias": {
             "dev-master": "0.1.x-dev"
         }
-    },
-    "require": {
-        "guzzle/guzzle": "3.4.1"
     }
 }

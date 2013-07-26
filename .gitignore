@@ -1,3 +1,4 @@
 /tests/CoverArtArchive/Coverage/
 /vendor/
 composer.lock
+/.idea/
